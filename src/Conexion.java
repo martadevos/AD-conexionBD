@@ -96,39 +96,37 @@ public class Conexion {
                 //Consulta.consultarApellidosConOhAh(con, "mdevos");
                 //Consulta.consultarEntre24Y32Anios(con, "mdevos");
                 //Consulta.consultarMas65Anios(con, "mdevos");
-                //añadirColumnas(con, "mdevos", campos2);
-                Actualizacion.actualizarLaboral(con, "mdevos");
+                //aniadirColumnas(con, "mdevos", campos2);
+                //Actualizacion.actualizarLaboral(con, "mdevos");
+                //Consulta.consultaPreparadaNombre(connection_, "mdevos", "J");
+                //Consulta.consultaPreparadaNombreApellido(connection_, "mdevos", "J", "A");
+                //Consulta.consultaPreparadaEdad(connection_, "mdevos", 24, 32);
 
             } else {
                 System.out.println("Conexión fallida");
             }
 
-        } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
 
     private static void crearTabla(Statement con, String tabla, String[] campos) {
-        String sql = "CREATE TABLE ad2223." + tabla + "(";
+        StringBuilder sql = new StringBuilder("CREATE TABLE ad2223." + tabla + "(");
 
         for (int i = 0; i < campos.length - 1; i++) {
-            sql += campos[i];
-            if (i < campos.length - 1) sql += ", ";
+            sql.append(campos[i]);
+            if (i < campos.length - 1) sql.append(", ");
         }
-        sql += campos[campos.length - 1] + "";
-        System.out.println(sql);
-
+        sql.append(campos[campos.length - 1]);
         try {
-            con.executeUpdate(sql);
+            con.executeUpdate(sql.toString());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void añadirColumnas(Statement con, String tabla, String[] campos) {
+    private static void aniadirColumnas(Statement con, String tabla, String[] campos) {
         String sql = "ALTER TABLE ad2223." + tabla+" ADD";
 
         for (int i = 0; i < campos.length - 1 || campos.length > 1; i++) {
@@ -163,18 +161,15 @@ public class Conexion {
 
 
     public static void mostrarDatos(ResultSet lista) {
-        ;
         try {
             ResultSetMetaData md = lista.getMetaData();
             while (lista.next()) {
-                String cadena = "";
+                StringBuilder cadena = new StringBuilder();
                 for (int i = 1; i<=md.getColumnCount(); i++){
-                    cadena+= md.getColumnLabel(i).toUpperCase()+": "+lista.getString(md.getColumnLabel(i))+"    ";
+                    cadena.append(md.getColumnLabel(i).toUpperCase()).append(": ").append(lista.getString(md.getColumnLabel(i))).append("    ");
                 }
                 System.out.println(cadena);
             }
-
-
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
